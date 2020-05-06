@@ -1,0 +1,41 @@
+# filename: serverless.yml
+service: HelloWorld
+
+# Create an optimized package for our functions
+package:
+  individually: true
+
+plugins:
+  # - serverless-bundle # Package our functions with Webpack
+  - serverless-offline
+  - serverless-dotenv-plugin # Load .env as environment variables
+
+# The `provider` block defines where your service will be deployed
+# custom:
+#   bucket: serverless-lambda-example
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: eu-central-1
+  stackName: <stackName>
+
+# The `functions` block defines what code to deploy
+functions:
+  graphql:
+    # this is formatted as <FILENAME>.<HANDLER>
+    handler: src/handler.graphqlHandler
+    events:
+      - http:
+          path: graphql
+          method: post
+          cors: true
+      - http:
+          path: graphql
+          method: get
+          cors: true
+    environment:
+      PGDATABASE: <database>
+      PGHOST: <host ip>
+      PGPASSWORD: <password>
+      PGPORT: <port>
+      PGUSER: <user>
